@@ -295,7 +295,7 @@ public class STUPIDActivity extends Activity {
 	 */
 	private int getCurrentPeriod() {
 		Calendar today = new GregorianCalendar();
-		today = new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 16, 25);
+		//today = new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 16, 25);
 		
 		int currentPeriod = 0;
 		int i = 1;

@@ -36,9 +36,12 @@ public class STUPIDSettingsActivity extends Activity {
 	}
 
 	@Override
-	public void onStop() {
+	public void onPause() {
+		super.onPause();
+		
 		System.out.println("Jepp, funktioniert in 2" + classes.get(spinner.getSelectedItemPosition()));
 		saveClass(classes.get(spinner.getSelectedItemPosition()));
+		System.out.println("Wird auch gespeichert.");
 	}
 
 	

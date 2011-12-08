@@ -1,8 +1,5 @@
 package de.gsokoeln.stupid;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,17 +8,39 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
 public class STUPIDActivity extends Activity {
 	/** Called when the activity is first created. */
+	
+	List<Calendar> startTimes = new ArrayList<Calendar>();
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		createdHardcodedPeriodValues();
+		
+		System.out.println("read in 1:" +readClass());
+		if(readClass().length() == 0 ) {
+			setContentView(R.layout.settings);
+			Intent myIntent = new Intent(this, STUPIDSettingsActivity.class);
+            startActivityForResult(myIntent, 0);	
+		}
+		else {
+			System.out.println("read else in 1:" +readClass());
+		}
+
+		setContentView(R.layout.main);
+
 		int currentDay = getDayofWeek();
 		int currentWeek = getWeekofYear();
 		
+	    
 		URL scheduleURL = null;
 		try {
 			scheduleURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/lesson.txt");
@@ -29,7 +48,9 @@ public class STUPIDActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		List<String[]> completeSchedule = loadDataFromURL(scheduleURL);
+		List<String[]> completeSchedule = Util.loadDataFromURL(scheduleURL);
+		
+		
 		
 		URL timeURL = null;
 		try {
@@ -38,93 +59,107 @@ public class STUPIDActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		List<String[]> timeData = loadDataFromURL(timeURL);
-		int currentPeriod = getCurrentPeriod(timeData);
-		String className = "FIA91";
+		List<String[]> timeData = Util.loadDataFromURL(timeURL);
+		int currentPeriod = getCurrentPeriod();
+		String className = readClass();
 		List<String> LessonInformation = getLessonInformation(currentDay, currentWeek, completeSchedule,
 				currentPeriod, className);
 
+		
 		printLessonInformation(LessonInformation);
 	}
 
-	private void printLessonInformation(List<String> lessonInformation) {
-	    TextView tv = new TextView(this);
-		tv.setText("aktueller raum: " + lessonInformation.get(0) + '\n' +
-					"aktueller lehrer: " + lessonInformation.get(1)+ '\n' +
-					"aktueller klasse: " + lessonInformation.get(2));
-	    setContentView(tv);
+	private void createdHardcodedPeriodValues() {
+		Calendar today = new GregorianCalendar();
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 7, 45));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 8, 30));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 9, 35));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 10, 20));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 11, 25));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 12, 10));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 13, 15));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 14, 00));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 15, 05));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 15, 50));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 16, 55));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 17, 40));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 18, 45));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 19, 30));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 20, 35));
+		startTimes.add(new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), 21, 20));
 	}
 
+	private void printLessonInformation(List<String> lessonInformation) {
+		
+	    TextView room = (TextView) findViewById(R.id.textView1);
+	    TextView teacher = (TextView) findViewById(R.id.textView2);
+	    TextView klass = (TextView) findViewById(R.id.textView3);
+
+//	    room.setText(lessonInformation.get(0));
+//	    teacher.setText(lessonInformation.get(1));
+//	    klass.setText(lessonInformation.get(2));
+	    
+	}
+	
 	private List getLessonInformation(int currentDay, int currentWeek,
 			List<String[]> completeSchedule, int currentPeriod, String className) {
 		
-		List<String> LessonInformation = new ArrayList<String>();
+		List<String> lessonInformation = new ArrayList<String>();
 		
 		for(String[] currentSchedule : completeSchedule) {
 			if(currentSchedule[7].equals(className)) {
 				if(currentSchedule[8].charAt(currentWeek-1)=='1') {
 					if(currentSchedule[1].equals(new Integer(currentDay).toString())) {
-						if(currentSchedule[2].equals(new Integer(currentPeriod).toString())) {
-							LessonInformation.add(currentSchedule[4]);
-							LessonInformation.add(currentSchedule[0]);
-							LessonInformation.add(currentSchedule[7]);
-						}
+						lessonInformation.add(currentSchedule[1]); // Welche Stunde
+						lessonInformation.add(currentSchedule[4]); // Welcher Raum
+						lessonInformation.add(currentSchedule[0]); // Welcher Lehrer
 					}
 				}
 			}
 		}
 		
-		return LessonInformation;
+		return lessonInformation;
 	}
-
-	private int getCurrentPeriod(List<String[]> timeData) {
+	
+	private int getCurrentPeriod() {
 		Calendar today = new GregorianCalendar();
 		
-		for (int i=0; i<16; i++ )
+		int curPeriod=0;
+		int i=1;
+		for (Calendar curStartTime : startTimes)
 		{
-			String[] curHour = (String[]) timeData.get(i);
-			int curStartHour = Integer.parseInt(curHour[3].substring(0, 2));
-			int curStartMin = Integer.parseInt(curHour[3].substring(2, 4));
-			int curStopHour = Integer.parseInt(curHour[4].substring(0, 2));
-			int curStopMin = Integer.parseInt(curHour[4].substring(2, 4));
-			
-			Calendar currentHourStart = new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), curStartHour, curStartMin);
-			Calendar currentHourStop = new GregorianCalendar(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), curStopHour, curStopMin);
-			
-			if(today.after(currentHourStart)) {
-				if(today.before(currentHourStop))
-					return(Integer.parseInt(curHour[1]));
+			Calendar endTime = curStartTime;
+			endTime.add(Calendar.MINUTE, 45);
+			if(today.after(curStartTime) && today.before(endTime)) {
+					curPeriod=i;
 			}
+			//if(curStartTime.after(today) && )
+			
+			i++;
 		}
-		return 0;
+		return curPeriod;
 	}
+	
+	
 
 	private int getWeekofYear() {
 		Calendar today = new GregorianCalendar();
 		return today.get(Calendar.WEEK_OF_YEAR);
 	}
 
+	
+	// Ermittelt den Wochentag, z.b. Donnerstag = 4
 	private int getDayofWeek() {
 		Calendar today = new GregorianCalendar();
 		return today.get(Calendar.DAY_OF_WEEK)-1;
 	}
 
-	private List<String[]> loadDataFromURL(URL source) {
-		List<String[]> completeSchedule = null;
-		try {
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(
-							source.openStream()), '\t');
-			String inputLine;
-		    
-		    completeSchedule = new ArrayList<String[]>();
-			while ((inputLine = in.readLine()) != null)
-		    		completeSchedule.add(inputLine.split("\t")); 
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return completeSchedule;
-	}
+	private String readClass()
+    {
+    	SharedPreferences settings = getSharedPreferences("STUPID.prefs", 0);
+        String  klass = settings.getString("Class", "");
+
+		return klass;
+    }
+	
 }

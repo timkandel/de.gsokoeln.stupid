@@ -39,6 +39,8 @@ public class STUPIDSettingsActivity extends Activity {
 		if (!Util.isOnline(this)) {
 			Toast.makeText(this, "Kein Internet", Toast.LENGTH_LONG).show();
 		} else {
+			setContentView(R.layout.settings);
+			
 			URL classURL = null;
 			try {
 				classURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/class.txt");

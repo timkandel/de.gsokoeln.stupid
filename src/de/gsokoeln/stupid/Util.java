@@ -53,7 +53,7 @@ public class Util {
 	 * @param textView
 	 */
 	public static void hideTextView(TextView textView) {
-		textView.setHeight(0);
+		//textView.setHeight(0);
 		textView.setVisibility(View.INVISIBLE);
 	}
 	

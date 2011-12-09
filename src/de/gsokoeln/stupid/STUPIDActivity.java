@@ -14,6 +14,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +32,7 @@ public class STUPIDActivity extends Activity {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main);
 		Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
@@ -80,9 +82,18 @@ public class STUPIDActivity extends Activity {
 	
 	/**
 	 * 
+	 * @return
+	 */
+	private Activity getActivity() {
+		return this;
+	}
+	
+	/**
+	 * 
 	 */
 	private void displaySchedule() {
-		createdHardcodedPeriodStartTimes();
+		new DisplayScheduleTask().execute();
+		/*createdHardcodedPeriodStartTimes();
 		int currentDay = Util.getDayOfWeek();
 		int currentWeek = Util.getWeekOfYear();
 		
@@ -98,7 +109,7 @@ public class STUPIDActivity extends Activity {
 		String className = Util.getSchoolClass(this);
 		List<String> LessonInformation = getLessonInformation(currentDay, currentWeek, completeSchedule, currentPeriod, className);
 		
-		printLessonInformation(LessonInformation, currentPeriod);
+		printLessonInformation(LessonInformation, currentPeriod);*/
 	}
 
 	/**
@@ -145,40 +156,50 @@ public class STUPIDActivity extends Activity {
     		String currentTeacher = "---";
     		String currentPeriodNumber = "---";
     		String currentSubject = "---";
+    		boolean currentLessonIsChanged = false;
     		
     		String nextRoom = "---";
     		String nextTeacher = "---";
     		String nextPeriodNumber = "---";
     		String nextSubject = "---";
+    		boolean nextLessonIsChanged = false;
 	    	
 	    	if (lessonInformation.get(0).equals(new Integer(currentPeriod).toString())) {
 	    		currentRoom = lessonInformation.get(1);
 	    		currentTeacher = lessonInformation.get(2);
 	    		currentPeriodNumber = lessonInformation.get(0);
 	    		currentSubject = lessonInformation.get(3);
+	    		if (lessonInformation.get(4).equals("2"))
+	    			currentLessonIsChanged = true;
 	    		
-	    		if (lessonInformation.size() > 4) {
-	    			nextRoom = lessonInformation.get(5);
-		    		nextTeacher = lessonInformation.get(6);
-		    		nextPeriodNumber = lessonInformation.get(4);
-		    		nextSubject = lessonInformation.get(7);
+	    		if (lessonInformation.size() > 5) {
+	    			nextRoom = lessonInformation.get(6);
+		    		nextTeacher = lessonInformation.get(7);
+		    		nextPeriodNumber = lessonInformation.get(5);
+		    		nextSubject = lessonInformation.get(8);
+		    		if (lessonInformation.get(9).equals("2"))
+		    			nextLessonIsChanged = true;
 	    		} else {
 	    			hideNextLesson();
 	    		}
 	    	} else {
-	    		currentRoom = lessonInformation.get(5);
-	    		currentTeacher = lessonInformation.get(6);
-	    		currentPeriodNumber = lessonInformation.get(4);
-	    		currentSubject = lessonInformation.get(7);
+	    		currentRoom = lessonInformation.get(6);
+	    		currentTeacher = lessonInformation.get(7);
+	    		currentPeriodNumber = lessonInformation.get(5);
+	    		currentSubject = lessonInformation.get(8);
+	    		if (lessonInformation.get(9).equals("2"))
+	    			currentLessonIsChanged = true;
 	    		
     			nextRoom = lessonInformation.get(1);
 	    		nextTeacher = lessonInformation.get(2);
 	    		nextPeriodNumber = lessonInformation.get(0);
 	    		nextSubject = lessonInformation.get(3);
+	    		if (lessonInformation.get(4).equals("2"))
+	    			nextLessonIsChanged = true;
 	    	}
 	    	
-	    	printCurrentLesson(currentRoom, currentTeacher, currentPeriodNumber, currentSubject);
-	    	printNextLesson(nextRoom, nextTeacher, nextPeriodNumber, nextSubject);
+	    	printCurrentLesson(currentRoom, currentTeacher, currentPeriodNumber, currentSubject, currentLessonIsChanged);
+	    	printNextLesson(nextRoom, nextTeacher, nextPeriodNumber, nextSubject, nextLessonIsChanged);
 	    } else {
 		    hideCurrentLesson();
 	    }
@@ -192,6 +213,8 @@ public class STUPIDActivity extends Activity {
 	    TextView currentTeacherTextView = (TextView) findViewById(R.id.currentTeacherTextView);
 	    TextView currentPeriodTextView = (TextView) findViewById(R.id.currentPeriodTextView);
 	    TextView currentSubjectTextView = (TextView) findViewById(R.id.currentSubjectTextView);
+	    
+	    currentRoomTextView.setTextColor(Color.WHITE);
 	    
 	    currentRoomTextView.setText("Zur Zeit kein Unterricht");
     	Util.hideTextView(currentPeriodTextView);
@@ -225,7 +248,7 @@ public class STUPIDActivity extends Activity {
 	 * @param period
 	 * @param subject
 	 */
-	private void printCurrentLesson(String room, String teacher, String period, String subject) {
+	private void printCurrentLesson(String room, String teacher, String period, String subject, boolean lessonIsChanged) {
 		TextView currentRoomTextView = (TextView) findViewById(R.id.currentRoomTextView);
 	    TextView currentTeacherTextView = (TextView) findViewById(R.id.currentTeacherTextView);
 	    TextView currentPeriodTextView = (TextView) findViewById(R.id.currentPeriodTextView);
@@ -235,6 +258,22 @@ public class STUPIDActivity extends Activity {
 		currentPeriodTextView.setText(period + ". Stunde");
 		currentSubjectTextView.setText("Fach: " + subject);
 		currentTeacherTextView.setText("Lehrer: " + teacher);
+		
+		if (lessonIsChanged) {
+			currentRoomTextView.setTextColor(Color.RED);
+			currentTeacherTextView.setTextColor(Color.RED);
+			currentSubjectTextView.setTextColor(Color.RED);
+			currentPeriodTextView.setTextColor(Color.RED);
+		} else {
+			currentRoomTextView.setTextColor(Color.WHITE);
+			currentTeacherTextView.setTextColor(Color.WHITE);
+			currentSubjectTextView.setTextColor(Color.WHITE);
+			currentPeriodTextView.setTextColor(Color.WHITE);
+		}
+		
+		Util.showTextView(currentPeriodTextView);
+    	Util.showTextView(currentTeacherTextView);
+    	Util.showTextView(currentSubjectTextView);
 	}
 	
 	/**
@@ -244,7 +283,8 @@ public class STUPIDActivity extends Activity {
 	 * @param period
 	 * @param subject
 	 */
-	private void printNextLesson(String room, String teacher, String period, String subject) {
+	private void printNextLesson(String room, String teacher, String period, String subject, boolean lessonIsChanged) {
+		TextView spacerTextView = (TextView)findViewById(R.id.spacerTextView);
 		TextView nextRoomTextView = (TextView) findViewById(R.id.nextRoomTextView);
 	    TextView nextTeacherTextView = (TextView) findViewById(R.id.nextTeacherTextView);
 	    TextView nextPeriodTextView = (TextView) findViewById(R.id.nextPeriodTextView);
@@ -254,6 +294,24 @@ public class STUPIDActivity extends Activity {
 		nextPeriodTextView.setText(period + ". Stunde");
 		nextSubjectTextView.setText("Fach: " + subject);
 		nextTeacherTextView.setText("Lehrer: " + teacher);
+		
+		if (lessonIsChanged) {
+			nextRoomTextView.setTextColor(Color.RED);
+			nextTeacherTextView.setTextColor(Color.RED);
+			nextSubjectTextView.setTextColor(Color.RED);
+			nextPeriodTextView.setTextColor(Color.RED);
+		} else {
+			nextRoomTextView.setTextColor(Color.WHITE);
+			nextTeacherTextView.setTextColor(Color.WHITE);
+			nextSubjectTextView.setTextColor(Color.WHITE);
+			nextPeriodTextView.setTextColor(Color.WHITE);
+		}
+		
+		Util.showTextView(spacerTextView);
+    	Util.showTextView(nextRoomTextView);
+    	Util.showTextView(nextTeacherTextView);
+    	Util.showTextView(nextPeriodTextView);
+    	Util.showTextView(nextSubjectTextView);
 	}
 	
 	/**
@@ -283,7 +341,7 @@ public class STUPIDActivity extends Activity {
 								lessonInformation.add(currentSchedule[4]); 		// Welcher Raum
 								lessonInformation.add(currentSchedule[0]); 		// Welcher Lehrer
 								lessonInformation.add(currentSchedule[3]);		// Welches Fach
-								//lessonInformation.add(currentSchedule[6]);		// Stundenplanänderung ?
+								lessonInformation.add(currentSchedule[6]);		// Stundenplanänderung ?
 							}
 						}
 					}
@@ -318,4 +376,30 @@ public class STUPIDActivity extends Activity {
 		
 		return currentPeriod;
 	}
+	
+	private class DisplayScheduleTask extends AsyncTask<Void, Void, List<String>> {
+	     protected List<String> doInBackground(Void... voids) {
+	    	createdHardcodedPeriodStartTimes();
+	 		int currentDay = Util.getDayOfWeek();
+	 		int currentWeek = Util.getWeekOfYear();
+	 		
+	 		URL scheduleURL = null;
+	 		try {
+	 			scheduleURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/lesson.txt");
+	 		} catch (MalformedURLException e) {
+	 			e.printStackTrace();
+	 		}
+	 		List<String[]> completeSchedule = Util.loadDataFromURL(scheduleURL);
+	 		
+	 		int currentPeriod = getCurrentPeriod();
+			String className = Util.getSchoolClass(getActivity());
+			List<String> lessonInformation = getLessonInformation(currentDay, currentWeek, completeSchedule, currentPeriod, className);
+	 		
+	 		return lessonInformation;
+	     }
+
+	     protected void onPostExecute(List<String> result) {
+	    	 printLessonInformation(result, getCurrentPeriod());
+	     }
+	 }
 }

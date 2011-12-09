@@ -1,1 +1,0 @@
-- Bug: funzt nicht wenn grad keine Stunde ist (IndexOOB in der print...)

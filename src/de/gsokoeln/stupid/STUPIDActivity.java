@@ -1,4 +1,6 @@
 /**
+ * @author Georg Rode
+ * @author Matthias Nagler
  * @author Sebastian Drewke
  * @author Tim Kandel
  * @author Viktor Hamm
@@ -67,14 +69,6 @@ public class STUPIDActivity extends Activity {
 			if (!Util.isOnline(this)) {
 				Toast.makeText(this, "Kein Internet", Toast.LENGTH_LONG).show();
 			} else {
-				Button reloadButton = (Button)findViewById(R.id.reloadButton);
-				Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
-				ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
-				
-				reloadButton.setClickable(false);
-				preferencesButton.setClickable(false);
-				Util.showProgressBar(progressBar);
-				
 				displaySchedule();
 			}
 		}
@@ -92,24 +86,15 @@ public class STUPIDActivity extends Activity {
 	 * 
 	 */
 	private void displaySchedule() {
+		Button reloadButton = (Button)findViewById(R.id.reloadButton);
+		Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
+		ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
+		
+		reloadButton.setClickable(false);
+		preferencesButton.setClickable(false);
+		Util.showProgressBar(progressBar);
+		
 		new DisplayScheduleTask().execute();
-		/*createdHardcodedPeriodStartTimes();
-		int currentDay = Util.getDayOfWeek();
-		int currentWeek = Util.getWeekOfYear();
-		
-		URL scheduleURL = null;
-		try {
-			scheduleURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/lesson.txt");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		List<String[]> completeSchedule = Util.loadDataFromURL(scheduleURL);
-		
-		int currentPeriod = getCurrentPeriod();
-		String className = Util.getSchoolClass(this);
-		List<String> LessonInformation = getLessonInformation(currentDay, currentWeek, completeSchedule, currentPeriod, className);
-		
-		printLessonInformation(LessonInformation, currentPeriod);*/
 	}
 
 	/**

@@ -1,7 +1,9 @@
 /**
+ * @author Georg Rode
+ * @author Matthias Nagler
  * @author Sebastian Drewke
  * @author Tim Kandel
- * @Author Viktor Hamm
+ * @author Viktor Hamm
  */
 package de.gsokoeln.stupid;
 

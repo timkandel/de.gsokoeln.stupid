@@ -1,4 +1,6 @@
 /**
+ * @author Georg Rode
+ * @author Matthias Nagler
  * @author Sebastian Drewke
  * @author Tim Kandel
  * @author Viktor Hamm

@@ -15,7 +15,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -120,5 +123,19 @@ public class Util {
 	public static int getDayOfWeek() {
 		Calendar today = new GregorianCalendar();
 		return today.get(Calendar.DAY_OF_WEEK) - 1;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static boolean isOnline(Activity activity) {
+		ConnectivityManager cm = (ConnectivityManager)activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (null != netInfo && netInfo.isConnected()) {
+			return true;
+		}
+		
+		return false;
 	}
 }

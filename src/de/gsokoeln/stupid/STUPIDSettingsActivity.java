@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class STUPIDSettingsActivity extends Activity {
 
@@ -29,15 +30,6 @@ public class STUPIDSettingsActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.settings);
-		Button saveButton = (Button)findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), STUPIDActivity.class);
-                startActivityForResult(myIntent, 0);
-            }
-        });
 	}
 	
 	/**
@@ -47,17 +39,21 @@ public class STUPIDSettingsActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		
-		URL classURL = null;
-		try {
-			classURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/class.txt");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!Util.isOnline(this)) {
+			Toast.makeText(this, "Kein Internet", Toast.LENGTH_LONG).show();
+		} else {
+			URL classURL = null;
+			try {
+				classURL = new URL("http://www.gso-koeln.de/infos/kalender/stupid/class.txt");
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			List<String[]> completeClass = Util.loadDataFromURL(classURL);
+			classes = getClasses(completeClass);
+			createSpinner(classes);
 		}
-		
-		List<String[]> completeClass = Util.loadDataFromURL(classURL);
-		classes = getClasses(completeClass);
-		createSpinner(classes);
 	}
 
 	/**
@@ -67,7 +63,9 @@ public class STUPIDSettingsActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		
-		Util.setSchoolClass(classes.get(spinner.getSelectedItemPosition()), this);
+		if (Util.isOnline(this)) {
+			Util.setSchoolClass(classes.get(spinner.getSelectedItemPosition()), this);
+		}
 	}
 	
 	/**

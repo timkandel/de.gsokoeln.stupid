@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class STUPIDActivity extends Activity {
 	
@@ -61,15 +62,19 @@ public class STUPIDActivity extends Activity {
 			Intent myIntent = new Intent(this, STUPIDSettingsActivity.class);
             startActivityForResult(myIntent, 0);	
 		} else {
-			Button reloadButton = (Button)findViewById(R.id.reloadButton);
-			Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
-			ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
-			
-			reloadButton.setClickable(false);
-			preferencesButton.setClickable(false);
-			Util.showProgressBar(progressBar);
-			
-			displaySchedule();
+			if (!Util.isOnline(this)) {
+				Toast.makeText(this, "Kein Internet", Toast.LENGTH_LONG).show();
+			} else {
+				Button reloadButton = (Button)findViewById(R.id.reloadButton);
+				Button preferencesButton = (Button)findViewById(R.id.preferencesButton);
+				ProgressBar progressBar = (ProgressBar)findViewById(R.id.progressBar);
+				
+				reloadButton.setClickable(false);
+				preferencesButton.setClickable(false);
+				Util.showProgressBar(progressBar);
+				
+				displaySchedule();
+			}
 		}
 	}
 	

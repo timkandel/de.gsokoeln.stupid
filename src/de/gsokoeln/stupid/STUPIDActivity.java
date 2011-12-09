@@ -94,6 +94,8 @@ public class STUPIDActivity extends Activity {
 		preferencesButton.setClickable(false);
 		Util.showProgressBar(progressBar);
 		
+		createdHardcodedPeriodStartTimes();
+		
 		new DisplayScheduleTask().execute();
 	}
 
@@ -362,9 +364,15 @@ public class STUPIDActivity extends Activity {
 		return currentPeriod;
 	}
 	
+	/**
+	 *
+	 */
 	private class DisplayScheduleTask extends AsyncTask<Void, Void, List<String>> {
+		
+		/**
+		 * 
+		 */
 	     protected List<String> doInBackground(Void... voids) {
-	    	createdHardcodedPeriodStartTimes();
 	 		int currentDay = Util.getDayOfWeek();
 	 		int currentWeek = Util.getWeekOfYear();
 	 		
@@ -383,6 +391,9 @@ public class STUPIDActivity extends Activity {
 	 		return lessonInformation;
 	     }
 
+	     /**
+	      * 
+	      */
 	     protected void onPostExecute(List<String> result) {
 	    	 printLessonInformation(result, getCurrentPeriod());
 	     }

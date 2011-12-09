@@ -24,7 +24,7 @@ public class STUPIDSettingsActivity extends Activity {
 	List<String> classes = null;
 	
 	/**
-	 * 
+	 * Generelle Initialisierung der Activity
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class STUPIDSettingsActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * Ausführen des Klassencodes
 	 */
 	@Override
 	public void onStart() {
@@ -40,7 +40,9 @@ public class STUPIDSettingsActivity extends Activity {
 		
 		if (!Util.isOnline(this)) {
 			Toast.makeText(this, "Kein Internet", Toast.LENGTH_LONG).show();
-		} else {
+		} 
+		// Laden der Klassen
+		else {
 			setContentView(R.layout.settings);
 			
 			URL classURL = null;
@@ -58,7 +60,7 @@ public class STUPIDSettingsActivity extends Activity {
 	}
 
 	/**
-	 * 
+	 * impliziertes Speichern beim Verlassen der Activity
 	 */
 	@Override
 	public void onPause() {
@@ -70,6 +72,7 @@ public class STUPIDSettingsActivity extends Activity {
 	}
 	
 	/**
+	 * Füllen des Spinners mit Klassennamen
 	 * 
 	 * @param classes
 	 */
@@ -85,22 +88,25 @@ public class STUPIDSettingsActivity extends Activity {
 	}
 	
 	/**
+	 * Parsen der Klassendatei
 	 * 
-	 * @param completeClass
-	 * @return
+	 * @param completeClass Inhalt der Klassendatei
+	 * @return Klassenliste
 	 */
 	private List<String> getClasses(List<String[]> completeClass) {
 		List<String> classes = new ArrayList<String>();
 		for(String[]curClassString : completeClass) {
 			classes.add(curClassString[0]);
 		}
+		
 		return classes;
 	}
 	
 	/**
+	 * Position der gespeicherten Klasse abfragen
 	 * 
-	 * @param classes
-	 * @return
+	 * @param classes Liste aller Klassen
+	 * @return Position der Klasse
 	 */
 	public int getPositionOfSchoolClass(List<String> classes) {
 		int i = 0;

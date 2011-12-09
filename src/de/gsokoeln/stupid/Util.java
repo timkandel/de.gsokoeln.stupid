@@ -28,9 +28,10 @@ import android.widget.TextView;
 public class Util {
 
 	/**
+	 * Laden und parsen einer CSV Datei mit Trennung durch Tab
 	 * 
-	 * @param source
-	 * @return
+	 * @param source URL der Datei
+	 * @return Geparste Datei als List
 	 */
 	public static List<String[]> loadDataFromURL(URL source) {
 		List<String[]> completeSchedule = null;
@@ -51,24 +52,25 @@ public class Util {
 	}
 	
 	/**
+	 * Verstecken einer TextView
 	 * 
 	 * @param textView
 	 */
 	public static void hideTextView(TextView textView) {
-		//textView.setHeight(0);
 		textView.setVisibility(View.INVISIBLE);
 	}
 	
 	/**
+	 * Anzeigen einer TextView
 	 * 
 	 * @param textView
 	 */
 	public static void showTextView(TextView textView) {
-		//textView.setHeight(pixels);
 		textView.setVisibility(View.VISIBLE);
 	}
 	
 	/**
+	 * Verstecken einer ProgressBar
 	 * 
 	 * @param progressBar
 	 */
@@ -77,6 +79,7 @@ public class Util {
 	}
 	
 	/**
+	 * Anzeigen einer ProgressBar
 	 * 
 	 * @param progressBar
 	 */
@@ -85,9 +88,10 @@ public class Util {
 	}
 	
 	/**
+	 * Abrufen der gespeicherten Schulklasse
 	 * 
-	 * @param activity
-	 * @return
+	 * @param activity Activity
+	 * @return Klassenname
 	 */
 	public static String getSchoolClass(Activity activity) {
 		SharedPreferences settings = activity.getSharedPreferences("STUPID.prefs", 0);
@@ -97,9 +101,10 @@ public class Util {
 	}
 	
 	/**
+	 * Setzen der Schulklasse
 	 * 
-	 * @param schoolClass
-	 * @param activity
+	 * @param schoolClass Klassenname
+	 * @param activity Aktivität
 	 */
 	public static void setSchoolClass(String schoolClass, Activity activity) {
 		SharedPreferences settings = activity.getSharedPreferences("STUPID.prefs", 0);
@@ -110,8 +115,9 @@ public class Util {
 	}
 	
 	/**
+	 * Abfragen der Kalenderwoche
 	 * 
-	 * @return
+	 * @return Kalenderwoche
 	 */
 	public static int getWeekOfYear() {
 		Calendar today = new GregorianCalendar();
@@ -119,8 +125,9 @@ public class Util {
 	}
 	
 	/**
+	 * Abfragen des Wochentags
 	 * 
-	 * @return
+	 * @return Wochentag
 	 */
 	public static int getDayOfWeek() {
 		Calendar today = new GregorianCalendar();
@@ -128,8 +135,9 @@ public class Util {
 	}
 	
 	/**
+	 * Abfrage ob Internetverbindung vorhanden ist
 	 * 
-	 * @return
+	 * @return Internetverbindung
 	 */
 	public static boolean isOnline(Activity activity) {
 		ConnectivityManager cm = (ConnectivityManager)activity.getSystemService(Context.CONNECTIVITY_SERVICE);
